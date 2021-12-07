@@ -64,4 +64,37 @@ router.put('/:id', async(req, res) => {
     res.send(product)
 })
 
+router.get('/', async(req, res) => {
+    const product = await Product.findAll();
+    return res.json(product)
+})
+
+router.get('/:id', async(req, res) => {
+    const id = req.params.id
+    const product = await Product.findByPk(id)
+
+    return res.json(product || {})
+
+})
+
+router.delete('/:id', async(req, res) => {
+    const id = req.params.id
+
+    const product = await Product.findByPk(id)
+
+    if (!product) {
+        return res.status(401).json({
+            message: "product not found"
+        })
+    }
+
+    await product.destroy()
+
+    res.json({
+        message: "product is deleted",
+        data: product
+    })
+
+})
+
 module.exports = router
